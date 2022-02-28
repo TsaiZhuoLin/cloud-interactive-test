@@ -3,7 +3,7 @@ import { StockQueryParams } from "../../types/stockTypes";
 
 const stockApiHeader = {
   "x-rapidapi-host": "alpha-vantage.p.rapidapi.com",
-  "x-rapidapi-key": "256a0c2157msha2003e205d5bc6bp136c91jsn4427fe08a1f8",
+  "x-rapidapi-key": process.env.REACT_APP_SECRET_CODE,
 };
 
 const baseUrl = "https://alpha-vantage.p.rapidapi.com";
