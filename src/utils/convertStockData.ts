@@ -1,23 +1,10 @@
-export interface StockQueryParams {
-  interval: string;
-  function: string;
-  symbol: string;
-  datatype: string;
-  output_size: string;
-  time_zone?: string;
-}
-
-interface IMetaData {
-  metaData: StockQueryParams;
-}
-
-interface IKlineData {}
+import { IMetaData, IKlineData, IStockData } from "../types/stockTypes";
 
 const klineDataConfig = ["1. open", "2. high", "3. low", "4. close", "5. volume"];
 
 export const convertStockData = (stockData: {}) => {
   const convertedStockData = [];
-  const formatStockData: Array<IMetaData | IKlineData> = [];
+  const formatStockData: Partial<Array<IMetaData | IKlineData>> = [];
 
   for (const [key, value] of Object.entries(stockData)) {
     convertedStockData.push({
@@ -25,9 +12,8 @@ export const convertStockData = (stockData: {}) => {
     });
   }
 
-  convertedStockData.forEach((item: IMetaData | IKlineData, index: number) => {
+  convertedStockData.forEach((item: Partial<IStockData>, index: number) => {
     if (index === 0) {
-      console.log(`this is Object.values(item)[0] => `, Object.values(item)[0]);
       formatStockData.push({
         metaData: Object.values(item)[0],
       } as IMetaData);
@@ -62,12 +48,10 @@ export const convertStockData = (stockData: {}) => {
           };
         });
 
-        return entriesKline;
+        return entriesKline as Array<IMetaData | IKlineData>;
       });
-
       formatStockData.push(newValues[0]);
     }
   });
-
   return formatStockData;
 };

@@ -24,6 +24,7 @@ const defaultStockName = "AAPL";
 
 const Stock = () => {
   const chart = init(`klineChart`);
+
   const [searchStockName, setSearchStockName] = useState<string>(defaultStockName);
   const [submitStockName, setSubmitStockName] = useState<string>(searchStockName);
   const [currentStockName, setCurrentStockName] = useState<string>(defaultStockName);
@@ -39,16 +40,19 @@ const Stock = () => {
   useEffect(() => {
     if (stockData && Object.keys(stockData).length !== 0) {
       const convertedStockData = convertStockData(stockData);
-      const resMetaData = convertedStockData[0].metaData;
+      const resMetaData = convertedStockData[0]?.metaData;
       if (typeof resMetaData === "string") {
         setCurrentStockName("Wrong Stock Name");
         return alert("Wrong Stock Name");
       }
-      console.log(`this is convertedStockData => `, typeof resMetaData);
-      const currentStockSymbol = convertedStockData[0].metaData[metaDataConfig[1]];
+
+      const currentStockSymbol = convertedStockData[0]?.metaData[metaDataConfig[1]];
 
       setCurrentStockName(currentStockSymbol);
       chart?.applyNewData(convertedStockData[1]);
+      if (chart?._chartPane._separators.size < 1) {
+        chart?.createTechnicalIndicator("VOL", false);
+      }
     }
   }, [stockData]);
 
@@ -78,11 +82,3 @@ const Stock = () => {
 };
 
 export default Stock;
-
-// params: {
-//   interval: '5min',
-//   function: 'TIME_SERIES_INTRADAY',
-//   symbol: 'AAPL',
-//   datatype: 'json',
-//   output_size: 'compact'
-// },
